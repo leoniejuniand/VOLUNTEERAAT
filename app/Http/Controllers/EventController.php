@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Secretariat;
@@ -183,5 +184,56 @@ class EventController extends Controller
         ]);
 
         return back()->with('success', 'Status pendaftar berhasil diperbarui!');
+    }
+
+    // FUNGSI BARU: Download Data Peserta (CSV/Excel)
+    public function exportParticipants(Event $event)
+    {
+        $user = Auth::user();
+
+        // Keamanan: Admin Sekre hanya bisa export data kegiatannya sendiri
+        if ($user->hasRole('admin_sekre') && $event->secretariat_id != $user->secretariat_id) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        // Ambil data pendaftaran yang sudah Diterima atau Menunggu
+        $registrations = EventRegistration::with('user')->where('event_id', $event->id)->get();
+
+        $fileName = 'Rekap_Peserta_' . Str::slug($event->title) . '.csv';
+        
+        // Header untuk memaksa browser mengunduh file
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        // Nama-nama kolom di Excel nanti
+        $columns = ['No', 'Nama Relawan', 'Email', 'No WhatsApp', 'Instansi', 'Waktu Daftar', 'Status', 'Kehadiran'];
+
+        // Proses penulisan data ke dalam file CSV
+        $callback = function() use($registrations, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns); // Tulis header kolom
+
+            $row = 1;
+            foreach ($registrations as $reg) {
+                fputcsv($file, [
+                    $row++,
+                    $reg->user->name,
+                    $reg->user->email,
+                    $reg->user->whatsapp_number ?? '-',
+                    $reg->user->institution ?? '-',
+                    $reg->created_at->format('Y-m-d H:i'),
+                    $reg->status,
+                    $reg->is_present ? 'Hadir' : 'Tidak Hadir'
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

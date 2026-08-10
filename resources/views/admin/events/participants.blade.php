@@ -14,8 +14,14 @@
                 </div>
             @endif
 
-            <div class="mb-4">
+            <div class="mb-4 flex justify-between items-center">
                 <a href="{{ route('events.index') }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">&larr; Kembali ke Daftar Kegiatan</a>
+                
+                <!-- TOMBOL DOWNLOAD EXPORT -->
+                <a href="{{ route('events.participants.export', $event->id) }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download Rekap Data
+                </a>
             </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\VolunteerEventController;
 use App\Http\Controllers\SecretariatController;
+use App\Http\Controllers\CertificateController;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\User;
@@ -47,15 +48,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::middleware(['role:super_admin|admin_sekre'])->group(function () {
-            Route::get('/users', [UserController::class, 'index'])->name('users.index');
-            Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-            Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-            Route::resource('events', EventController::class);
-                // Rute Manajemen Pendaftar Kegiatan
-            Route::get('/events/{event}/participants', [EventController::class, 'participants'])->name('events.participants');
-            Route::put('/event-registrations/{registration}', [EventController::class, 'updateRegistrationStatus'])->name('events.registrations.update');
-     });
+
+Route::middleware(['role:super_admin|admin_sekre'])->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::resource('events', EventController::class);
+            // Rute Manajemen Pendaftar Kegiatan
+        Route::get('/events/{event}/participants', [EventController::class, 'participants'])->name('events.participants');
+        Route::put('/event-registrations/{registration}', [EventController::class, 'updateRegistrationStatus'])->name('events.registrations.update');
+        Route::get('/events/{event}/export-participants', [EventController::class, 'exportParticipants'])->name('events.participants.export');
+    });
+
      // RUTE KHUSUS SUPER ADMIN
     Route::middleware(['role:super_admin'])->group(function () {
         Route::get('/secretariats', [SecretariatController::class, 'index'])->name('secretariats.index');
@@ -67,6 +71,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/kegiatan-tersedia', [VolunteerEventController::class, 'index'])->name('volunteer.events.index');
             Route::post('/kegiatan-tersedia/{event}/daftar', [VolunteerEventController::class, 'register'])->name('volunteer.events.register');
             Route::get('/riwayat-kegiatan', [VolunteerEventController::class, 'history'])->name('volunteer.events.history');
+            Route::get('/sertifikat/{registration}', [CertificateController::class, 'download'])->name('volunteer.certificate.download');
     });
 });
 

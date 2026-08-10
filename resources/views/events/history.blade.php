@@ -37,6 +37,16 @@
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 Diterima
                                             </span>
+                                            
+                                            <!-- Logika Tombol Sertifikat -->
+                                            @if($reg->is_present && $reg->event->status == 'Selesai')
+                                                <div class="mt-2">
+                                                    <a href="{{ route('volunteer.certificate.download', $reg->id) }}" class="inline-flex items-center px-3 py-1 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                                                        &#128196; Unduh Sertifikat
+                                                    </a>
+                                                </div>
+                                            @endif
+
                                         @elseif($reg->status == 'Ditolak')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                                 Ditolak
