@@ -23,6 +23,10 @@ class User extends Authenticatable
         'email',
         'password',
         'secretariat_id', 
+        'whatsapp_number', 
+        'address',         
+        'institution',     
+        'profile_picture',
     ];
     /**
      * Get the attributes that should be cast.

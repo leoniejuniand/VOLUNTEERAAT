@@ -15,17 +15,14 @@ class ProfileUpdateRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
-            ],
-        ];
-    }
+ {
+     return [
+         'name' => ['required', 'string', 'max:255'],
+         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', \Illuminate\Validation\Rule::unique(\App\Models\User::class)->ignore($this->user()->id)],
+         'whatsapp_number' => ['nullable', 'string', 'max:20'],
+         'address' => ['nullable', 'string'],
+         'institution' => ['nullable', 'string', 'max:255'],
+         'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Maksimal 2MB
+     ];
+ }
 }

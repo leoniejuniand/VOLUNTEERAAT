@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -24,12 +25,24 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): \Illuminate\Http\RedirectResponse
     {
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
+        }
+
+        // Proses unggah foto profil
+        if ($request->hasFile('profile_picture')) {
+            // Hapus foto lama jika ada
+            if ($request->user()->profile_picture) {
+                Storage::disk('public')->delete($request->user()->profile_picture);
+            }
+
+            // Simpan foto baru
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $request->user()->profile_picture = $path;
         }
 
         $request->user()->save();

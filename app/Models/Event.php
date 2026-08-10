@@ -21,6 +21,11 @@ class Event extends Model
         'status'
     ];
 
+    protected $casts = [
+     'event_date' => 'date',
+     'registration_deadline' => 'datetime',
+    ];
+
     // Relasi: 1 Event dimiliki oleh 1 Sekretariat
     public function secretariat()
     {

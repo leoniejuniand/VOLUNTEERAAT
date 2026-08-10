@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -47,6 +47,42 @@
             @endif
         </div>
 
+        <!-- Nomor WhatsApp -->
+     <div>
+         <x-input-label for="whatsapp_number" :value="__('Nomor WhatsApp')" />
+         <x-text-input id="whatsapp_number" name="whatsapp_number" type="text" class="mt-1 block w-full" :value="old('whatsapp_number', $user->whatsapp_number)" placeholder="Contoh: 081234567890" />
+         <x-input-error class="mt-2" :messages="$errors->get('whatsapp_number')" />
+     </div>
+
+     <!-- Instansi / Asal Kampus -->
+     <div>
+         <x-input-label for="institution" :value="__('Instansi / Asal Kampus')" />
+         <x-text-input id="institution" name="institution" type="text" class="mt-1 block w-full" :value="old('institution', $user->institution)" placeholder="Contoh: Universitas Jenderal Soedirman" />
+         <x-input-error class="mt-2" :messages="$errors->get('institution')" />
+     </div>
+
+     <!-- Alamat -->
+     <div>
+         <x-input-label for="address" :value="__('Alamat Domisili')" />
+         <textarea id="address" name="address" rows="3" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('address', $user->address) }}</textarea>
+         <x-input-error class="mt-2" :messages="$errors->get('address')" />
+     </div>
+
+     <!-- Foto Profil -->
+     <div>
+         <x-input-label for="profile_picture" :value="__('Foto Profil (Opsional)')" />
+
+         @if($user->profile_picture)
+             <div class="mt-2 mb-3">
+                 <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile" class="h-20 w-20 object-cover rounded-full border shadow-sm">
+             </div>
+         @endif
+
+         <input id="profile_picture" class="block mt-1 w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none" type="file" name="profile_picture" accept="image/png, image/jpeg, image/jpg" />
+         <p class="mt-1 text-xs text-gray-500">Format: JPG/PNG. Maksimal 2MB.</p>
+         <x-input-error class="mt-2" :messages="$errors->get('profile_picture')" />
+     </div>
+     
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
