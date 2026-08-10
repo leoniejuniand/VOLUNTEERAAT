@@ -16,6 +16,38 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                @role('relawan')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('volunteer.events.index')" :active="request()->routeIs('volunteer.events.*')">
+                        {{ __('Daftar Kegiatan') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('volunteer.events.history')" :active="request()->routeIs('volunteer.events.history')">
+                        {{ __('Riwayat Kegiatan') }}
+                    </x-nav-link>
+                </div>
+                @endrole
+
+                @hasanyrole('super_admin|admin_sekre')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                        {{ __('Data Relawan') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
+                        {{ __('Data Kegiatan') }}
+                    </x-nav-link>
+                </div>
+                @endhasanyrole
+                @role('super_admin')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('secretariats.index')" :active="request()->routeIs('secretariats.*')">
+                        {{ __('Data Sekretariat') }}
+                    </x-nav-link>
+                </div>
+                @endrole
             </div>
 
             <!-- Settings Dropdown -->

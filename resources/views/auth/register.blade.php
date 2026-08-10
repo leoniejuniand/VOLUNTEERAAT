@@ -16,6 +16,18 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Secretariat -->
+        <div class="mt-4">
+            <x-input-label for="secretariat_id" :value="__('Pilih Sekretariat')" />
+            <select id="secretariat_id" name="secretariat_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                <option value="" disabled selected>-- Pilih Sekretariat Anda --</option>
+                @foreach ($secretariats as $sekre)
+                    <option value="{{ $sekre->id }}">{{ $sekre->name }}</option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('secretariat_id')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />

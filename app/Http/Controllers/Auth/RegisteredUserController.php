@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Secretariat;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,9 +20,10 @@ class RegisteredUserController extends Controller
      * Display the registration view.
      */
     public function create(): View
-    {
-        return view('auth.register');
-    }
+{
+    $secretariats = Secretariat::all();
+    return view('auth.register', compact('secretariats'));
+}
 
     /**
      * Handle an incoming registration request.
@@ -29,23 +31,28 @@ class RegisteredUserController extends Controller
      * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+        'secretariat_id' => ['required', 'exists:secretariats,id'], // Validasi pilihan sekre
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'secretariat_id' => $request->secretariat_id, // Simpan sekre yang dipilih
+    ]);
 
-        event(new Registered($user));
+    // Berikan hak akses (role) sebagai relawan secara otomatis
+    $user->assignRole('relawan');
 
-        Auth::login($user);
+    event(new \Illuminate\Auth\Events\Registered($user));
 
-        return redirect(route('dashboard', absolute: false));
-    }
+    Auth::login($user);
+
+    return redirect(route('dashboard', absolute: false));
+}
 }
