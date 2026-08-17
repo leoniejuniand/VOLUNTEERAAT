@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Secretariat;
 use App\Models\EventRegistration;
+use App\Notifications\RegistrationStatusNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,7 +23,8 @@ class EventController extends Controller
         } else {
             $events = Event::with('secretariat')
                            ->where('secretariat_id', $user->secretariat_id)
-                           ->latest()->get();
+                           ->latest()
+                           ->get();
         }
 
         return view('admin.events.index', compact('events'));
@@ -102,7 +104,7 @@ class EventController extends Controller
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'event_date' => 'required|date',
             'location' => 'required|string|max:255',
-            'status' => 'required|string',
+            'status' => 'required|in:Buka,Tutup,Selesai',
             'secretariat_id' => $user->hasRole('super_admin') ? 'required|exists:secretariats,id' : 'nullable',
             'registration_deadline' => 'nullable|date',
             'quota' => 'nullable|integer|min:1',
@@ -182,6 +184,8 @@ class EventController extends Controller
             'status' => $request->status,
             'is_present' => $request->is_present, // Simpan absensi
         ]);
+
+        $registration->user->notify(new RegistrationStatusNotification($event->title, $request->status));
 
         return back()->with('success', 'Status pendaftar berhasil diperbarui!');
     }

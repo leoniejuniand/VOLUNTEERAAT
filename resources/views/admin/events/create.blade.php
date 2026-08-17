@@ -50,6 +50,17 @@
                                 <x-text-input id="quota" class="block mt-1 w-full" type="number" min="1" name="quota" placeholder="Kosongkan jika tak terbatas" />
                             </div>
                         </div>
+
+                        <!-- Dropdown Status Kegiatan -->
+                        <div class="mb-4">
+                            <x-input-label for="status" :value="__('Status Kegiatan')" />
+                            <select name="status" id="status" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                                <option value="Buka" selected>Buka</option>
+                                <option value="Tutup">Tutup</option>
+                                <option value="Selesai">Selesai (Kegiatan Berakhir)</option>
+                            </select>
+                        </div>
+
                         <!-- Pilihan Sekre HANYA muncul untuk Super Admin -->
                         @role('super_admin')
                         <div class="mb-4">

@@ -23,7 +23,7 @@ class CertificateController extends Controller
 
         // 3. Render HTML ke PDF (menggunakan ukuran kertas A4 model landscape)
         $pdf = Pdf::loadView('events.certificate', compact('registration'))
-                  ->setPaper('a4', 'landscape');
+                  ->setPaper('a4', 'landscape'); // <- Bagian ini yang memastikan formatnya landscape
 
         // 4. Unduh file PDF-nya
         $namaFile = 'Sertifikat_Relawan_' . Auth::user()->name . '.pdf';

@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <title>E-Sertifikat Relawan</title>
     <style>
+        @page {
+            size: A4 landscape;
+            margin: 0; 
+        }
+
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
             text-align: center;

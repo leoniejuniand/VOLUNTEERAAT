@@ -16,7 +16,8 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    
+                    <table id="tabel-kegiatan" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama Kegiatan</th>
@@ -52,13 +53,35 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada kegiatan.</td>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">Belum ada kegiatan.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const table = document.getElementById("tabel-kegiatan");
+            
+            // Cek jika tabel berisi data asli (bukan sekadar tulisan "Belum ada kegiatan")
+            if (table && table.rows.length > 1 && !table.rows[1].cells[0].hasAttribute('colspan')) {
+                new simpleDatatables.DataTable(table, {
+                    searchable: true,
+                    fixedHeight: false,
+                    perPage: 10, 
+                    labels: {
+                        placeholder: "🔍 Cari kegiatan, lokasi, status...",
+                        perPage: "data per halaman",
+                        noRows: "Tidak ada data yang ditemukan",
+                        info: "Menampilkan {start} sampai {end} dari {rows} data",
+                    }
+                });
+            }
+        });
+    </script>
 </x-app-layout>
