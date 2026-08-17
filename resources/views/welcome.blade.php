@@ -20,6 +20,7 @@
                     <span class="font-bold text-2xl text-indigo-600 tracking-wider">Volunteer<span class="text-gray-800">AAT</span></span>
                 </div>
                 
+                
                 <!-- Menu Login / Register -->
                 <div class="flex items-center space-x-4">
                     @if (Route::has('login'))
@@ -89,6 +90,55 @@
             </div>
         </div>
     </main>
+
+    <!-- Bagian Kegiatan -->
+    <section class="py-12 bg-gray-50" id="kegiatan">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-gray-900">Kegiatan Volunteer Terbaru</h2>
+                <p class="mt-4 text-lg text-gray-500">Mari berkontribusi dan bawa perubahan positif bersama kami.</p>
+            </div>
+            
+            <!-- Grid Kegiatan -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @forelse($kegiatan as $item)
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
+                    <!-- Menampilkan Cover Image -->
+                    @if($item->cover_image)
+                        <img src="{{ asset('storage/' . $item->cover_image) }}" alt="{{ $item->title ?? 'Cover Kegiatan' }}" class="w-full h-48 object-cover">
+                    @else
+                        <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                            <span class="text-gray-500">Tidak ada gambar</span>
+                        </div>
+                    @endif
+                    
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $item->title ?? 'Judul Kegiatan' }}</h3>
+                            <p class="text-sm text-gray-600 mb-2">
+                                <!-- Menampilkan Deadline -->
+                                <strong>Batas Pendaftaran:</strong> {{ \Carbon\Carbon::parse($item->deadline)->format('d M Y') }}
+                            </p>
+                            <p class="text-gray-700 text-sm mb-4 line-clamp-3">
+                                {{ $item->description ?? 'Deskripsi singkat mengenai kegiatan ini.' }}
+                            </p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="{{ route('event.show', $item->id) }}" class="inline-block w-full text-center bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="col-span-3 text-center py-8">
+                    <p class="text-gray-500">Belum ada kegiatan terbaru saat ini.</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
 
     <!-- Footer Simple -->
     <footer class="bg-white border-t border-gray-200 mt-12">
