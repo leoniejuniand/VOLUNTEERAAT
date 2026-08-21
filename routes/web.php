@@ -13,8 +13,11 @@ use App\Models\EventRegistration;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-// Route Halaman Utama (Landing Page)
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
+
+Route::get('/kegiatan/{event}', [HomeController::class, 'show'])
+    ->name('home.event.show');
 
 // Route Dashboard
 Route::get('/dashboard', function () {

@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event; // Pastikan model Event di-import
-use Illuminate\Http\Request;
+use App\Models\Event;
 
 class HomeController extends Controller
 {
-   public function index()
-{
-    // Mengambil beberapa kegiatan terbaru yang statusnya 'Buka'
-    $kegiatan = Event::where('status', 'Buka')->latest()->take(3)->get();
-    
-    return view('welcome', compact('kegiatan'));
-}
+    public function index()
+    {
+        // Ambil 6 kegiatan terbaru dari tabel events
+        $kegiatan = Event::latest()
+            ->take(6)
+            ->get();
+
+        return view('welcome', compact('kegiatan'));
+    }
+
+    // Detail kegiatan untuk pengunjung umum
+    public function show(Event $event)
+    {
+        return view('event-detail', compact('event'));
+    }
 }

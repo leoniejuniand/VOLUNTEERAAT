@@ -90,59 +90,398 @@
             </div>
         </div>
     </main>
-
-    <!-- Bagian Kegiatan -->
-    <section class="py-12 bg-gray-50" id="kegiatan">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-gray-900">Kegiatan Volunteer Terbaru</h2>
-                <p class="mt-4 text-lg text-gray-500">Mari berkontribusi dan bawa perubahan positif bersama kami.</p>
-            </div>
             
-            <!-- Grid Kegiatan -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                @isset($kegiatan)
-                    @if($kegiatan->count() > 0)
-                        <!-- Looping data kegiatan -->
-                        @foreach($kegiatan as $item)
-                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-200">
-                                <!-- Area Foto Placeholder -->
-                                <div class="h-48 bg-indigo-100 flex items-center justify-center">
-                                    <span class="text-indigo-500 font-medium">📸 Foto/Ilustrasi</span>
-                                </div>
-                                
-                                <div class="p-6">
-                                    {{-- Sesuaikan 'nama_kegiatan' dengan kolom di database Anda --}}
-                                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $item->nama_kegiatan ?? 'Nama Kegiatan' }}</h3>
-                                    
-                                    <div class="mt-4 flex items-center justify-between">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Tersedia
-                                        </span>
-                                        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                            Lihat Detail &rarr;
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <!-- Tampilan jika database kosong -->
-                        <div class="col-span-1 md:col-span-3 text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
-                            <p class="text-gray-500 font-medium">Belum ada data kegiatan yang tersedia saat ini.</p>
-                            <p class="text-sm text-gray-400 mt-1">Silakan tambahkan kegiatan baru melalui dashboard admin.</p>
-                        </div>
-                    @endif
-                @else
-                    <!-- Tampilan jika variabel tidak dikirim dari Controller -->
-                    <div class="col-span-1 md:col-span-3 text-center py-12 bg-red-50 rounded-lg border border-red-200">
-                        <p class="text-red-600 font-bold">⚠️ Error: Variabel $kegiatan tidak ditemukan!</p>
-                        <p class="text-sm text-red-500 mt-1">Pastikan HomeController mengirimkan data compact('kegiatan').</p>
-                    </div>
-                @endisset
-            </div>
+        <!-- Bagian Kegiatan -->
+<!-- Bagian Kegiatan -->
+<section class="py-16 bg-gray-50" id="kegiatan">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Heading -->
+        <div class="text-center mb-12">
+            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-indigo-600 bg-indigo-100">
+                🌟 Kegiatan Kami
+            </span>
+
+            <h2 class="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900">
+                Kegiatan Volunteer Terbaru
+            </h2>
+
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-500">
+                Temukan berbagai kegiatan sosial dan pendidikan yang dapat kamu ikuti
+                untuk memberikan dampak positif bersama Yayasan AAT Indonesia.
+            </p>
         </div>
-    </section>
+
+
+        <!-- Grid Kegiatan -->
+        @if($kegiatan->count() > 0)
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                @foreach($kegiatan as $item)
+
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden
+                                border border-gray-100
+                                hover:shadow-xl hover:-translate-y-1
+                                transition-all duration-300">
+
+                        <!-- ========================= -->
+                        <!-- POSTER -->
+                        <!-- ========================= -->
+
+                        <div class="relative h-56 bg-indigo-100 overflow-hidden">
+
+                            @if($item->cover_image)
+
+                                <img
+                                    src="{{ asset('storage/' . $item->cover_image) }}"
+                                    alt="{{ $item->title }}"
+                                    class="w-full h-full object-cover
+                                           hover:scale-105 transition-transform duration-500"
+                                >
+
+                            @else
+
+                                <div class="w-full h-full flex flex-col
+                                            items-center justify-center
+                                            text-indigo-400">
+
+                                    <span class="text-5xl">📸</span>
+
+                                    <span class="mt-2 text-sm font-medium">
+                                        Poster belum tersedia
+                                    </span>
+
+                                </div>
+
+                            @endif
+
+
+                            <!-- STATUS -->
+                            <div class="absolute top-4 right-4">
+
+                                @if($item->status === 'Buka')
+
+                                    <span class="inline-flex items-center px-3 py-1
+                                                 rounded-full text-xs font-bold
+                                                 bg-green-100 text-green-700
+                                                 shadow-sm">
+
+                                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+
+                                        Buka
+
+                                    </span>
+
+                                @elseif($item->status === 'Selesai')
+
+                                    <span class="inline-flex items-center px-3 py-1
+                                                 rounded-full text-xs font-bold
+                                                 bg-gray-100 text-gray-600
+                                                 shadow-sm">
+
+                                        <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+
+                                        Selesai
+
+                                    </span>
+
+                                @else
+
+                                    <span class="inline-flex items-center px-3 py-1
+                                                 rounded-full text-xs font-bold
+                                                 bg-yellow-100 text-yellow-700
+                                                 shadow-sm">
+
+                                        {{ $item->status }}
+
+                                    </span>
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ========================= -->
+                        <!-- INFORMASI EVENT -->
+                        <!-- ========================= -->
+
+                        <div class="p-6">
+
+                            <!-- TITLE -->
+                            <h3 class="text-xl font-bold text-gray-900 leading-snug">
+
+                                {{ $item->title }}
+
+                            </h3>
+
+
+                            <!-- DESCRIPTION -->
+                            <p class="mt-3 text-sm text-gray-500 leading-relaxed line-clamp-2">
+
+                                {{ $item->description }}
+
+                            </p>
+
+
+                            <!-- INFO -->
+                            <div class="mt-5 space-y-3">
+
+                                <!-- Tanggal -->
+                                <div class="flex items-center text-sm text-gray-600">
+
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-50
+                                                flex items-center justify-center
+                                                text-indigo-600">
+
+                                        📅
+
+                                    </div>
+
+                                    <div class="ml-3">
+
+                                        <p class="text-xs text-gray-400">
+                                            Tanggal
+                                        </p>
+
+                                        <p class="font-medium">
+
+                                            {{ \Carbon\Carbon::parse($item->event_date)->translatedFormat('d F Y') }}
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Lokasi -->
+                                <div class="flex items-center text-sm text-gray-600">
+
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-50
+                                                flex items-center justify-center
+                                                text-indigo-600">
+
+                                        📍
+
+                                    </div>
+
+                                    <div class="ml-3 min-w-0">
+
+                                        <p class="text-xs text-gray-400">
+                                            Lokasi
+                                        </p>
+
+                                        <p class="font-medium truncate">
+
+                                            {{ $item->location }}
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Kuota -->
+                                <div class="flex items-center text-sm text-gray-600">
+
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-50
+                                                flex items-center justify-center
+                                                text-indigo-600">
+
+                                        👥
+
+                                    </div>
+
+                                    <div class="ml-3">
+
+                                        <p class="text-xs text-gray-400">
+                                            Kuota Relawan
+                                        </p>
+
+                                        <p class="font-medium">
+
+                                            {{ $item->quota }} orang
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ========================= -->
+                            <!-- BUTTON -->
+                            <!-- ========================= -->
+
+                            <div class="mt-6 pt-5 border-t border-gray-100
+                                        flex items-center gap-3">
+
+                                <!-- LIHAT DETAIL -->
+
+                                <a
+                                    href="{{ route('home.event.show', $item) }}"
+                                    class="flex-1 inline-flex items-center
+                                           justify-center px-4 py-2.5
+                                           rounded-lg border border-indigo-600
+                                           text-sm font-semibold
+                                           text-indigo-600
+                                           hover:bg-indigo-50
+                                           transition"
+                                >
+
+                                    Lihat Detail
+
+                                </a>
+
+
+                                <!-- DAFTAR -->
+
+                                @if($item->status === 'Buka')
+
+                                    @auth
+
+                                        @if(auth()->user()->hasRole('relawan'))
+
+                                            <form
+                                                action="{{ route('volunteer.events.register', $item) }}"
+                                                method="POST"
+                                                class="flex-1"
+                                            >
+
+                                                @csrf
+
+                                                <button
+                                                    type="submit"
+                                                    class="w-full inline-flex items-center
+                                                           justify-center px-4 py-2.5
+                                                           rounded-lg
+                                                           bg-indigo-600
+                                                           text-white
+                                                           text-sm font-semibold
+                                                           hover:bg-indigo-700
+                                                           transition"
+                                                >
+
+                                                    Daftar
+
+                                                </button>
+
+                                            </form>
+
+                                        @endif
+
+                                    @else
+
+                                        <a
+                                            href="{{ route('login') }}"
+                                            class="flex-1 inline-flex items-center
+                                                   justify-center px-4 py-2.5
+                                                   rounded-lg
+                                                   bg-indigo-600
+                                                   text-white
+                                                   text-sm font-semibold
+                                                   hover:bg-indigo-700
+                                                   transition"
+                                        >
+
+                                            Daftar
+
+                                        </a>
+
+                                    @endauth
+
+                                @else
+
+                                    <span
+                                        class="flex-1 inline-flex items-center
+                                               justify-center px-4 py-2.5
+                                               rounded-lg
+                                               bg-gray-100
+                                               text-gray-400
+                                               text-sm font-semibold"
+                                    >
+
+                                        Tidak Tersedia
+
+                                    </span>
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        @else
+
+            <!-- EMPTY STATE -->
+
+            <div class="text-center py-16 bg-white rounded-2xl
+                        border border-dashed border-gray-300">
+
+                <div class="text-5xl">
+                    📅
+                </div>
+
+                <h3 class="mt-4 text-lg font-semibold text-gray-800">
+
+                    Belum Ada Kegiatan
+
+                </h3>
+
+                <p class="mt-2 text-sm text-gray-500">
+
+                    Saat ini belum ada kegiatan volunteer yang tersedia.
+
+                </p>
+
+            </div>
+
+        @endif
+
+
+        <!-- LIHAT SEMUA -->
+        @if($kegiatan->count() > 0)
+
+            <div class="mt-10 text-center">
+
+                <a
+                    href="{{ route('volunteer.events.index') }}"
+                    class="inline-flex items-center px-6 py-3
+                           rounded-lg
+                           bg-white
+                           border border-indigo-600
+                           text-indigo-600
+                           font-semibold
+                           hover:bg-indigo-50
+                           transition"
+                >
+
+                    Lihat Semua Kegiatan
+
+                    <span class="ml-2">
+                        →
+                    </span>
+
+                </a>
+
+            </div>
+
+        @endif
+
+    </div>
+</section>
 
     <!-- Footer Simple -->
     <footer class="bg-white border-t border-gray-200 mt-12">
