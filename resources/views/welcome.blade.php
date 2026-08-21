@@ -101,41 +101,45 @@
             
             <!-- Grid Kegiatan -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                @forelse($kegiatan as $item)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                    <!-- Menampilkan Cover Image -->
-                    @if($item->cover_image)
-                        <img src="{{ asset('storage/' . $item->cover_image) }}" alt="{{ $item->title ?? 'Cover Kegiatan' }}" class="w-full h-48 object-cover">
+                @isset($kegiatan)
+                    @if($kegiatan->count() > 0)
+                        <!-- Looping data kegiatan -->
+                        @foreach($kegiatan as $item)
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-200">
+                                <!-- Area Foto Placeholder -->
+                                <div class="h-48 bg-indigo-100 flex items-center justify-center">
+                                    <span class="text-indigo-500 font-medium">📸 Foto/Ilustrasi</span>
+                                </div>
+                                
+                                <div class="p-6">
+                                    {{-- Sesuaikan 'nama_kegiatan' dengan kolom di database Anda --}}
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $item->nama_kegiatan ?? 'Nama Kegiatan' }}</h3>
+                                    
+                                    <div class="mt-4 flex items-center justify-between">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Tersedia
+                                        </span>
+                                        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                            Lihat Detail &rarr;
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     @else
-                        <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
-                            <span class="text-gray-500">Tidak ada gambar</span>
+                        <!-- Tampilan jika database kosong -->
+                        <div class="col-span-1 md:col-span-3 text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+                            <p class="text-gray-500 font-medium">Belum ada data kegiatan yang tersedia saat ini.</p>
+                            <p class="text-sm text-gray-400 mt-1">Silakan tambahkan kegiatan baru melalui dashboard admin.</p>
                         </div>
                     @endif
-                    
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $item->title ?? 'Judul Kegiatan' }}</h3>
-                            <p class="text-sm text-gray-600 mb-2">
-                                <!-- Menampilkan Deadline -->
-                                <strong>Batas Pendaftaran:</strong> {{ \Carbon\Carbon::parse($item->deadline)->format('d M Y') }}
-                            </p>
-                            <p class="text-gray-700 text-sm mb-4 line-clamp-3">
-                                {{ $item->description ?? 'Deskripsi singkat mengenai kegiatan ini.' }}
-                            </p>
-                        </div>
-                        
-                        <div class="mt-4">
-                            <a href="{{ route('event.show', $item->id) }}" class="inline-block w-full text-center bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition">
-                                Lihat Detail
-                            </a>
-                        </div>
+                @else
+                    <!-- Tampilan jika variabel tidak dikirim dari Controller -->
+                    <div class="col-span-1 md:col-span-3 text-center py-12 bg-red-50 rounded-lg border border-red-200">
+                        <p class="text-red-600 font-bold">⚠️ Error: Variabel $kegiatan tidak ditemukan!</p>
+                        <p class="text-sm text-red-500 mt-1">Pastikan HomeController mengirimkan data compact('kegiatan').</p>
                     </div>
-                </div>
-                @empty
-                <div class="col-span-3 text-center py-8">
-                    <p class="text-gray-500">Belum ada kegiatan terbaru saat ini.</p>
-                </div>
-                @endforelse
+                @endisset
             </div>
         </div>
     </section>

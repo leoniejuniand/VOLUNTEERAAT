@@ -7,15 +7,16 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\VolunteerEventController;
 use App\Http\Controllers\SecretariatController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\HomeController;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route Halaman Utama (Landing Page)
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Route Dashboard
 Route::get('/dashboard', function () {
     $user = Auth::user();
     $stats = [];
@@ -44,40 +45,44 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact('stats'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Route Authenticated Users
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Rute untuk menandai notifikasi sudah dibaca
+    // Menandai notifikasi sudah dibaca
     Route::post('/notifications/mark-read', function () {
         auth()->user()->unreadNotifications->markAsRead();
         return back();
     })->name('notifications.markAllRead');
 
-Route::middleware(['role:super_admin|admin_sekre'])->group(function () {
+    // RUTE KHUSUS SUPER ADMIN & ADMIN SEKRE
+    Route::middleware(['role:super_admin|admin_sekre'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::resource('events', EventController::class);
-            // Rute Manajemen Pendaftar Kegiatan
+        
+        // Manajemen Pendaftar Kegiatan
         Route::get('/events/{event}/participants', [EventController::class, 'participants'])->name('events.participants');
         Route::put('/event-registrations/{registration}', [EventController::class, 'updateRegistrationStatus'])->name('events.registrations.update');
         Route::get('/events/{event}/export-participants', [EventController::class, 'exportParticipants'])->name('events.participants.export');
     });
 
-     // RUTE KHUSUS SUPER ADMIN
+    // RUTE KHUSUS SUPER ADMIN
     Route::middleware(['role:super_admin'])->group(function () {
         Route::get('/secretariats', [SecretariatController::class, 'index'])->name('secretariats.index');
         Route::post('/secretariats', [SecretariatController::class, 'store'])->name('secretariats.store');
         Route::delete('/secretariats/{secretariat}', [SecretariatController::class, 'destroy'])->name('secretariats.destroy');
     });
-     // RUTE UNTUK RELAWAN
+     
+    // RUTE UNTUK RELAWAN
     Route::middleware(['role:relawan'])->group(function () {
-            Route::get('/kegiatan-tersedia', [VolunteerEventController::class, 'index'])->name('volunteer.events.index');
-            Route::post('/kegiatan-tersedia/{event}/daftar', [VolunteerEventController::class, 'register'])->name('volunteer.events.register');
-            Route::get('/riwayat-kegiatan', [VolunteerEventController::class, 'history'])->name('volunteer.events.history');
-            Route::get('/sertifikat/{registration}', [CertificateController::class, 'download'])->name('volunteer.certificate.download');
+        Route::get('/kegiatan-tersedia', [VolunteerEventController::class, 'index'])->name('volunteer.events.index');
+        Route::post('/kegiatan-tersedia/{event}/daftar', [VolunteerEventController::class, 'register'])->name('volunteer.events.register');
+        Route::get('/riwayat-kegiatan', [VolunteerEventController::class, 'history'])->name('volunteer.events.history');
+        Route::get('/sertifikat/{registration}', [CertificateController::class, 'download'])->name('volunteer.certificate.download');
     });
 });
 
